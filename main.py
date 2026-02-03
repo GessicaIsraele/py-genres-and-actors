@@ -1,32 +1,37 @@
 import init_django_orm  # noqa: F401
 
 from django.db.models import QuerySet
-from db.models import Genre, Actor
+
+from db.models import Actor, Genre
 
 
 def main() -> QuerySet:
     # 1. CREATE
-    Genre.objects.create(name="Western")
-    Genre.objects.create(name="Action")
-    dramma = Genre.objects.create(name="Dramma")
+    genres = ["Western", "Action", "Dramma"]
+    for genre_name in genres:
+        Genre.objects.create(name=genre_name)
 
-    george = Actor.objects.create(first_name="George", last_name="Klooney")
-    kianu = Actor.objects.create(first_name="Kianu", last_name="Reaves")
-    Actor.objects.create(first_name="Scarlett", last_name="Keegan")
-    Actor.objects.create(first_name="Will", last_name="Smith")
-    Actor.objects.create(first_name="Jaden", last_name="Smith")
-    Actor.objects.create(first_name="Scarlett", last_name="Johansson")
+    actors_data = [
+        ("George", "Klooney"),
+        ("Kianu", "Reaves"),
+        ("Scarlett", "Keegan"),
+        ("Will", "Smith"),
+        ("Jaden", "Smith"),
+        ("Scarlett", "Johansson"),
+    ]
+
+    for first_name, last_name in actors_data:
+        Actor.objects.create(first_name=first_name, last_name=last_name)
 
     # 2. UPDATE
-    dramma.name = "Drama"
-    dramma.save()
+    Genre.objects.filter(name="Dramma").update(name="Drama")
 
-    george.last_name = "Clooney"
-    george.save()
+    Actor.objects.filter(first_name="George").update(last_name="Clooney")
 
-    kianu.first_name = "Keanu"
-    kianu.last_name = "Reeves"
-    kianu.save()
+    Actor.objects.filter(first_name="Kianu").update(
+        first_name="Keanu",
+        last_name="Reeves",
+    )
 
     # 3. DELETE
     Genre.objects.filter(name="Action").delete()
